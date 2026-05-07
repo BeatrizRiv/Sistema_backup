@@ -1,0 +1,31 @@
+Crear un backup:
+mysqldump -u root -p sistema_backup > backup.sql
+-> backup.sql
+
+Comprimir archivo SQL:
+gzip backup.sql
+-> backup.sql.gz
+
+Descomprimir archivo SQL:
+gunzip backup.sql.gz
+-> backup.sql
+
+Cifrar backup comprimido:
+openssl enc -aes-256-cbc -salt -in backup.sql.gz -out backup.enc
+-> backup.enc
+
+Descrifrar backup comprimido:
+openssl enc -d -aes-256-cbc -in backup.enc -out backup_restaurado.sql.gz
+-> backup_restaurado.sql.gz
+
+Cifrar backup:
+openssl enc -aes-256-cbc -salt -in backup.sql -out backup.enc
+-> backup.enc
+
+Descrifrar backup:
+openssl enc -d -aes-256-cbc -in backup.enc -out backup_restaurado.sql
+-> backup_restaurado.sql
+
+Restaurar base de datos:
+mysql -u root -p sistema_backup < backup_restaurado.sql
+-> Restaura toda la información.
