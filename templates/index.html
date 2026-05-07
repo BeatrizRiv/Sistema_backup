@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Sistema Backup</title>
+
+    <style>
+
+        body{
+            font-family: Arial;
+            background-color: #f2f2f2;
+            padding: 40px;
+        }
+
+        .contenedor{
+            background: white;
+            width: 500px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+
+        h1{
+            text-align: center;
+        }
+
+        input, select, button{
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        button{
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover{
+            background-color: #0056b3;
+        }
+
+        hr{
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>Sistema de Backup</h1>
+
+    <h2>Crear Backup</h2>
+
+    <form action="/backup" method="POST">
+
+        <label>Seleccionar Base de Datos</label>
+
+        <select name="database">
+
+            {% for db in bases %}
+
+                <option value="{{ db }}">
+                    {{ db }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <label>Tipo de Backup</label>
+
+        <select name="type">
+
+            <option value="sql">
+                SQL
+            </option>
+
+            <option value="gz">
+                Comprimido (.gz)
+            </option>
+
+            <option value="enc">
+                Cifrado (.enc)
+            </option>
+
+        </select>
+
+        <button type="submit">
+            Crear Backup
+        </button>
+
+    </form>
+
+    <hr>
+
+    <h2>Restaurar Backup</h2>
+
+    <form
+        action="/restore"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        <label>Seleccionar Base de Datos</label>
+
+        <select name="restore_database">
+
+            {% for db in bases %}
+
+                <option value="{{ db }}">
+                    {{ db }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+        <label>Seleccionar Archivo</label>
+
+        <input
+            type="file"
+            name="file"
+            required
+        >
+
+        <button type="submit">
+            Restaurar
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>
