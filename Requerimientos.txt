@@ -1,0 +1,10 @@
+Python 3.11 o superior
+Flask
+python-dotenv
+mysql-connector-python o pymysql
+MySQL Server instalado y en ejecución
+Acceso a las utilidades mysql y mysqldump
+Carpeta backups con permisos de escritura
+Carpeta uploads con permisos de escritura
+Archivo .env con variables de configuración locales
+Navegador web para acceder a la interfaz
