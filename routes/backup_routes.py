@@ -1,36 +1,25 @@
-from flask import Blueprint, render_template, request, redirect
-from db import conectar, MYSQL_PASSWORD
+from flask import Blueprint, render_template, request, redirect, send_file
+from db import obtener_bases, MYSQL_PASSWORD
 from utils.backup_utils import crear_backup
 from utils.log_utils import guardar_log, obtener_logs
 
-backup_bp = Blueprint('backup', __name__)
+backup_bp = Blueprint('backup_bp', __name__)
+
+ultimo_backup = None
 
 
 @backup_bp.route('/')
 def index():
 
-    conexion = conectar()
-    cursor = conexion.cursor()
-    cursor.execute("SHOW DATABASES")
-
-    bases = [
-        db[0] for db in cursor
-        if db[0] not in (
-            'information_schema',
-            'mysql',
-            'performance_schema',
-            'sys'
-        )
-    ]
-
-    conexion.close()
+    bases = obtener_bases()
 
     logs = obtener_logs()
+
     mensaje = request.args.get('mensaje')
 
     return render_template(
         'index.html',
-        bases=bases,
+        databases=bases,
         logs=logs,
         mensaje=mensaje
     )
@@ -39,12 +28,31 @@ def index():
 @backup_bp.route('/backup', methods=['POST'])
 def backup():
 
+    global ultimo_backup
+
     database = request.form['database']
-    tipo = request.form['type']
 
-    # ✅ AQUÍ ESTÁ LA CORRECCIÓN
-    resultado = crear_backup(database, tipo, MYSQL_PASSWORD)
+    tipo = request.form['tipo']
 
-    guardar_log(f'BACKUP | {database} | OK')
+    resultado, ruta = crear_backup(
+        database,
+        tipo,
+        MYSQL_PASSWORD
+    )
+
+    ultimo_backup = ruta
+
+    guardar_log(f'{resultado} | {database}')
 
     return redirect(f'/?mensaje={resultado}')
+
+
+@backup_bp.route('/download')
+def download():
+
+    global ultimo_backup
+
+    return send_file(
+        ultimo_backup,
+        as_attachment=True
+    )

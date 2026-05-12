@@ -1,59 +1,91 @@
 import os
 import gzip
+import mysql.connector
 from datetime import datetime
 from utils.crypto_utils import fernet
 
-BACKUP_FOLDER = 'backups'
-
-os.makedirs(BACKUP_FOLDER, exist_ok=True)
+BACKUP_FOLDER = r'C:\Users\Beatriz\OneDrive\Escritorio\SistemaBackup\backups'
 
 
 def crear_backup(database, tipo, password):
 
-    fecha = datetime.now().strftime('%Y%m%d_%H%M%S')
+    try:
 
-    sql_file = f'{BACKUP_FOLDER}/{database}_{fecha}.sql'
+        conexion = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password=password
+        )
 
-    os.system(
-        f'mysqldump -u root -p{password} {database} > "{sql_file}"'
-    )
+        cursor = conexion.cursor()
 
-    if tipo == 'sql':
+        cursor.execute('SHOW DATABASES')
 
-        return 'Backup SQL creado correctamente'
+        bases = [db[0] for db in cursor]
 
-    elif tipo == 'gz':
+        conexion.close()
 
-        gz_file = f'{sql_file}.gz'
+        if database not in bases:
 
-        with open(sql_file, 'rb') as f_in:
-            with gzip.open(gz_file, 'wb') as f_out:
-                f_out.writelines(f_in)
+            return '❌ La base de datos no existe', None
 
-        os.remove(sql_file)
+        fecha = datetime.now().strftime('%Y%m%d_%H%M%S')
 
-        return 'Backup comprimido creado correctamente'
+        sql_file = os.path.join(
+            BACKUP_FOLDER,
+            f'{database}_{fecha}.sql'
+        )
 
-    elif tipo == 'enc':
+        comando = (
+            f'mysqldump -u root -ptoor '
+            f'{database} > "{sql_file}"'
+        )
 
-        gz_file = f'{sql_file}.gz'
+        os.system(comando)
 
-        with open(sql_file, 'rb') as f_in:
-            with gzip.open(gz_file, 'wb') as f_out:
-                f_out.writelines(f_in)
+        if tipo == 'sql':
 
-        with open(gz_file, 'rb') as archivo:
-            datos = archivo.read()
+            return '✅ Backup SQL creado correctamente', sql_file
 
-        datos_cifrados = fernet.encrypt(datos)
+        elif tipo == 'gz':
 
-        enc_file = f'{BACKUP_FOLDER}/{database}_{fecha}.enc'
+            gz_file = f'{sql_file}.gz'
 
-        with open(enc_file, 'wb') as archivo:
-            archivo.write(datos_cifrados)
+            with open(sql_file, 'rb') as f_in:
+                with gzip.open(gz_file, 'wb') as f_out:
+                    f_out.writelines(f_in)
 
-        os.remove(sql_file)
+            os.remove(sql_file)
 
-        os.remove(gz_file)
+            return '✅ Backup comprimido creado correctamente', gz_file
 
-        return 'Backup cifrado creado correctamente'
+        elif tipo == 'enc':
+
+            gz_file = f'{sql_file}.gz'
+
+            with open(sql_file, 'rb') as f_in:
+                with gzip.open(gz_file, 'wb') as f_out:
+                    f_out.writelines(f_in)
+
+            with open(gz_file, 'rb') as archivo:
+                datos = archivo.read()
+
+            datos_cifrados = fernet.encrypt(datos)
+
+            enc_file = os.path.join(
+                BACKUP_FOLDER,
+                f'{database}_{fecha}.enc'
+            )
+
+            with open(enc_file, 'wb') as archivo:
+                archivo.write(datos_cifrados)
+
+            os.remove(sql_file)
+
+            os.remove(gz_file)
+
+            return '✅ Backup cifrado creado correctamente', enc_file
+
+    except Exception as e:
+
+        return f'❌ Error: {str(e)}', None

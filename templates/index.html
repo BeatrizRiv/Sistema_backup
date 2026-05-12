@@ -5,6 +5,8 @@
 
     <meta charset="UTF-8">
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Sistema Backup</title>
 
     <link
@@ -18,90 +20,122 @@
 
 <div class="contenedor">
 
-    <div class="panel">
+    <div class="izquierda">
 
-        <h1>Sistema Backup</h1>
+        <h1>Sistema de Backup</h1>
 
         {% if mensaje %}
 
             <div class="mensaje">
+
                 {{ mensaje }}
+
             </div>
 
         {% endif %}
 
-        <!-- 🔵 BACKUP -->
-        <h2>Crear Backup</h2>
+        <div class="card">
 
-        <form action="/backup" method="POST">
+            <h2>Crear Backup</h2>
 
-            <select name="database">
+            <form action="/backup" method="POST">
 
-                {% for db in bases %}
+                <select name="database" required>
 
-                    <option value="{{ db }}">
-                        {{ db }}
+                    <option value="">
+                        Selecciona una base de datos
                     </option>
 
-                {% endfor %}
+                    {% for db in databases %}
 
-            </select>
+                        <option value="{{ db }}">
+                            {{ db }}
+                        </option>
 
-            <select name="type">
+                    {% endfor %}
 
-                <option value="sql">SQL</option>
-                <option value="gz">Comprimido</option>
-                <option value="enc">Cifrado</option>
+                </select>
 
-            </select>
+                <select name="tipo" required>
 
-            <button type="submit">
-                Crear Backup
-            </button>
+                    <option value="">
+                        Selecciona formato
+                    </option>
 
-        </form>
+                    <option value="sql">
+                        SQL
+                    </option>
 
-        <!-- 🔵 RESTORE (CORREGIDO) -->
-        <h2>Restaurar Backup</h2>
+                    <option value="gz">
+                        Comprimido (.gz)
+                    </option>
 
-        <form
-            action="/restore"
-            method="POST"
-            enctype="multipart/form-data"
-        >
+                    <option value="enc">
+                        Cifrado (.enc)
+                    </option>
 
-            <!-- ❌ eliminado selector de base de datos -->
+                </select>
 
-            <input
-                type="file"
-                name="file"
-                accept=".sql"
-                required
+                <button type="submit">
+
+                    Crear Backup
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Restaurar Backup</h2>
+
+            <form
+                action="/restore"
+                method="POST"
+                enctype="multipart/form-data"
             >
 
-            <p style="font-size: 12px; color: red;">
-                ⚠ El archivo debe ser un backup .sql válido
-            </p>
+                <input
+                    type="file"
+                    name="archivo"
+                    required
+                    accept=".sql,.gz,.enc"
+                >
 
-            <button type="submit">
-                Restaurar
-            </button>
+                <button type="submit">
 
-        </form>
+                    Restaurar Backup
+
+                </button>
+
+            </form>
+
+        </div>
 
     </div>
 
-    <div class="historial">
+    <div class="derecha">
 
-        <h2>Historial</h2>
+        <div class="card historial">
 
-        {% for log in logs %}
+            <h2>Historial</h2>
 
-            <div class="log">
-                {{ log }}
+            <div class="logs">
+
+                {% for log in logs %}
+
+                    <div class="log">
+
+                        {{ log }}
+
+                    </div>
+
+                {% endfor %}
+
             </div>
 
-        {% endfor %}
+        </div>
 
     </div>
 

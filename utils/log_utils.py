@@ -1,16 +1,6 @@
-import os
 from datetime import datetime
 
-LOG_FOLDER = 'logs'
-
-LOG_FILE = 'logs/logs.txt'
-
-os.makedirs(LOG_FOLDER, exist_ok=True)
-
-if not os.path.exists(LOG_FILE):
-
-    with open(LOG_FILE, 'w') as f:
-        pass
+LOG_FILE = r'C:\Users\Beatriz\OneDrive\Escritorio\SistemaBackup\logs\logs.txt'
 
 
 def guardar_log(mensaje):
@@ -24,10 +14,16 @@ def guardar_log(mensaje):
 
 def obtener_logs():
 
-    with open(LOG_FILE, 'r', encoding='utf-8') as archivo:
+    try:
 
-        lineas = archivo.readlines()
+        with open(LOG_FILE, 'r', encoding='utf-8') as archivo:
 
-    lineas.reverse()
+            lineas = archivo.readlines()
 
-    return lineas[:10]
+        lineas.reverse()
+
+        return lineas[:10]
+
+    except:
+
+        return []

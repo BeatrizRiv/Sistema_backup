@@ -8,11 +8,13 @@ restore_bp = Blueprint('restore', __name__)
 @restore_bp.route('/restore', methods=['POST'])
 def restore():
 
-    database = request.form['restore_database']
-    archivo = request.files['file']
+    archivo = request.files['archivo']
 
-    resultado = restaurar_backup(database, archivo)
+    resultado = restaurar_backup(
+        archivo,
+        'toor'
+    )
 
-    guardar_log(f'RESTORE | {database} | OK')
+    guardar_log(f'RESTORE | {resultado}')
 
     return redirect(f'/?mensaje={resultado}')
