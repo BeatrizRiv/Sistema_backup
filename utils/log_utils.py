@@ -1,6 +1,5 @@
 from datetime import datetime
-
-LOG_FILE = r'C:\Users\Beatriz\OneDrive\Escritorio\SistemaBackup\logs\logs.txt'
+from config import LOG_FILE
 
 
 def guardar_log(mensaje):
@@ -24,6 +23,6 @@ def obtener_logs():
 
         return lineas[:10]
 
-    except:
+    except FileNotFoundError:
 
         return []

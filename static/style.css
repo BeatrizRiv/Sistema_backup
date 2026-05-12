@@ -2,7 +2,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial;
+    font-family:Arial, sans-serif;
 }
 
 body{
@@ -12,6 +12,7 @@ body{
 
 .contenedor{
     display:flex;
+    flex-wrap:wrap;
     gap:20px;
     padding:30px;
     min-height:100vh;
@@ -19,14 +20,62 @@ body{
 
 .izquierda{
     flex:2;
+    min-width:320px;
 }
 
 .derecha{
     flex:1;
+    min-width:320px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.user-label{
+    color:#94a3b8;
+    margin-top:8px;
+}
+
+.link-button{
+    text-decoration:none;
+    padding:10px 16px;
+    border-radius:10px;
+    background:#334155;
+    color:white;
 }
 
 h1{
+    margin-bottom:10px;
+}
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(140px, 1fr));
+    gap:15px;
     margin-bottom:20px;
+}
+
+.stat-card{
+    background:#1e293b;
+    border:1px solid #334155;
+    border-radius:15px;
+    padding:18px;
+}
+
+.stat-card h3{
+    margin-bottom:10px;
+    font-size:0.95rem;
+    color:#cbd5e1;
+}
+
+.stat-card p{
+    font-size:1.3rem;
+    font-weight:bold;
 }
 
 .card{
@@ -52,6 +101,13 @@ button{
     padding:12px;
     border:none;
     border-radius:10px;
+    background:#0f172a;
+    color:white;
+}
+
+input,
+select{
+    border:1px solid #334155;
 }
 
 button{
@@ -63,6 +119,27 @@ button{
 
 button:hover{
     background:#1d4ed8;
+}
+
+.login-page{
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+}
+
+.login-card{
+    max-width:420px;
+}
+
+.mensaje{
+    background:#16a34a;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.mensaje-error{
+    background:#dc2626;
 }
 
 .historial{
@@ -79,13 +156,35 @@ button:hover{
 
 .log{
     background:#334155;
-    padding:10px;
+    padding:12px 14px;
     border-radius:10px;
+    line-height:1.4;
 }
 
-.mensaje{
-    background:#16a34a;
-    padding:15px;
-    border-radius:10px;
-    margin-bottom:20px;
+.log--success{
+    border-left:4px solid #22c55e;
+}
+
+.log--error{
+    border-left:4px solid #ef4444;
+}
+
+.log--warning{
+    border-left:4px solid #f97316;
+}
+
+.log--info{
+    border-left:4px solid #38bdf8;
+}
+
+.small-text{
+    color:#94a3b8;
+    font-size:0.9rem;
+}
+
+code{
+    background:#0f172a;
+    padding:2px 6px;
+    border-radius:6px;
+    color:#93c5fd;
 }

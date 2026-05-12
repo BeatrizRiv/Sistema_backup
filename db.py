@@ -1,35 +1,41 @@
-import mysql.connector
-
-MYSQL_PASSWORD = "toor"
+﻿import mysql.connector
+from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_PORT
 
 
 def obtener_bases():
 
-    conexion = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password=MYSQL_PASSWORD
-    )
+    try:
 
-    cursor = conexion.cursor()
+        conexion = mysql.connector.connect(
+            host=MYSQL_HOST,
+            user=MYSQL_USER,
+            password=MYSQL_PASSWORD,
+            port=MYSQL_PORT,
+        )
 
-    cursor.execute('SHOW DATABASES')
+        cursor = conexion.cursor()
 
-    bases = []
+        cursor.execute('SHOW DATABASES')
 
-    for db in cursor:
+        bases = []
 
-        nombre = db[0]
+        for db in cursor:
 
-        if nombre not in [
-            'information_schema',
-            'mysql',
-            'performance_schema',
-            'sys'
-        ]:
+            nombre = db[0]
 
-            bases.append(nombre)
+            if nombre not in [
+                'information_schema',
+                'mysql',
+                'performance_schema',
+                'sys'
+            ]:
 
-    conexion.close()
+                bases.append(nombre)
 
-    return bases
+        conexion.close()
+
+        return bases
+
+    except mysql.connector.Error as e:
+
+        raise RuntimeError(f'Error de conexión MySQL: {e}')

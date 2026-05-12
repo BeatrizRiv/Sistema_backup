@@ -22,7 +22,13 @@
 
     <div class="izquierda">
 
-        <h1>Sistema de Backup</h1>
+        <div class="topbar">
+            <div>
+                <h1>Sistema de Backup</h1>
+                <p class="user-label">Usuario: {{ user or 'Administrador' }}</p>
+            </div>
+            <a class="link-button" href="{{ url_for('auth.logout') }}">Cerrar sesión</a>
+        </div>
 
         {% if mensaje %}
 
@@ -34,6 +40,33 @@
 
         {% endif %}
 
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <h3>Total de backups</h3>
+                <p>{{ stats.total_backups }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Tamaño total</h3>
+                <p>{{ stats.total_size }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Último backup</h3>
+                <p>{{ stats.ultimo_backup }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Fecha último backup</h3>
+                <p>{{ stats.ultimo_backup_fecha }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Última restauración</h3>
+                <p>{{ stats.ultima_restauracion }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Estado del sistema</h3>
+                <p>{{ stats.estado_sistema }}</p>
+            </div>
+        </div>
+
         <div class="card">
 
             <h2>Crear Backup</h2>
@@ -42,15 +75,11 @@
 
                 <select name="database" required>
 
-                    <option value="">
-                        Selecciona una base de datos
-                    </option>
+                    <option value="">Selecciona una base de datos</option>
 
                     {% for db in databases %}
 
-                        <option value="{{ db }}">
-                            {{ db }}
-                        </option>
+                        <option value="{{ db }}">{{ db }}</option>
 
                     {% endfor %}
 
@@ -58,29 +87,14 @@
 
                 <select name="tipo" required>
 
-                    <option value="">
-                        Selecciona formato
-                    </option>
-
-                    <option value="sql">
-                        SQL
-                    </option>
-
-                    <option value="gz">
-                        Comprimido (.gz)
-                    </option>
-
-                    <option value="enc">
-                        Cifrado (.enc)
-                    </option>
+                    <option value="">Selecciona formato</option>
+                    <option value="sql">SQL</option>
+                    <option value="gz">Comprimido (.gz)</option>
+                    <option value="enc">Cifrado (.enc)</option>
 
                 </select>
 
-                <button type="submit">
-
-                    Crear Backup
-
-                </button>
+                <button type="submit">Crear Backup</button>
 
             </form>
 
@@ -90,25 +104,22 @@
 
             <h2>Restaurar Backup</h2>
 
-            <form
-                action="/restore"
-                method="POST"
-                enctype="multipart/form-data"
-            >
+            <form action="/restore" method="POST" enctype="multipart/form-data">
 
-                <input
-                    type="file"
-                    name="archivo"
-                    required
-                    accept=".sql,.gz,.enc"
-                >
+                <input type="file" name="archivo" required accept=".sql,.gz,.enc">
 
-                <button type="submit">
+                <button type="submit">Restaurar Backup</button>
 
-                    Restaurar Backup
+            </form>
 
-                </button>
+        </div>
 
+        <div class="card">
+
+            <h2>Backup de todo</h2>
+
+            <form action="/auto-backup" method="POST">
+                <button type="submit">Ejecutar copia automática</button>
             </form>
 
         </div>
@@ -125,7 +136,7 @@
 
                 {% for log in logs %}
 
-                    <div class="log">
+                    <div class="log {% if '✅' in log %}log--success{% elif '❌' in log %}log--error{% elif 'AUTO' in log %}log--warning{% else %}log--info{% endif %}">
 
                         {{ log }}
 

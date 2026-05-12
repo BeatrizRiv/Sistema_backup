@@ -3,3 +3,4 @@ uploads/*
 logs/*
 __pycache__/
 *.pyc
+.env
