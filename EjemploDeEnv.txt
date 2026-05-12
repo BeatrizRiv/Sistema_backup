@@ -1,0 +1,18 @@
+# Archivo local de configuración
+FLASK_SECRET_KEY=TuSecretoMuyLargoYSeguro
+ADMIN_USER=Usuario
+ADMIN_PASSWORD=AquiVaTuContrasenaDeUsuario
+
+MYSQL_HOST=localhost
+MYSQL_USER=root
+MYSQL_PASSWORD=AquiVaTuContrasenaDeMySQL
+MYSQL_PORT=3306
+
+MYSQL_PATH=C:\Program Files\MySQL\MySQL Server 9.2\bin\mysql.exe
+MYSQLDUMP_PATH=C:\Program Files\MySQL\MySQL Server 9.2\bin\mysqldump.exe
+
+BACKUP_FOLDER=backups
+UPLOAD_FOLDER=uploads
+LOG_FILE=logs/logs.txt
+
+AUTO_BACKUP_INTERVAL_MINUTES=0
